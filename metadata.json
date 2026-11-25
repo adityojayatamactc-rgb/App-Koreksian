@@ -1,0 +1,8 @@
+{
+  "name": "Remix AsesmenSMK — Koreksi Ujian Berbasis Visi AI",
+  "description": "Aplikasi koreksi lembar jawaban asesmen SMK (JPG/PDF) dengan pembacaan AI dan editor verifikasi guru untuk 7 mapel 40 PG + 5 Esai serta 1 mapel 45 PG + 5 Esai.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

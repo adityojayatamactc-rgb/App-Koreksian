@@ -1,0 +1,111 @@
+{
+  "entities": {
+    "TeacherProfile": {
+      "title": "TeacherProfile",
+      "description": "Profil akun guru untuk ruang kerja koreksi asesmen lintas perangkat.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "displayName": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 180 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "email", "createdAt", "updatedAt"]
+    },
+    "SubjectConfig": {
+      "title": "SubjectConfig",
+      "description": "Konfigurasi mata pelajaran SMK (7 mapel 40 PG + 5 Esai dan 1 mapel 45 PG + 5 Esai).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "ownerId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "code": { "type": "string", "maxLength": 32 },
+        "name": { "type": "string", "maxLength": 120 },
+        "gradeLevel": { "type": "string", "maxLength": 120 },
+        "pgCount": { "type": "integer" },
+        "essayCount": { "type": "integer" },
+        "pgWeight": { "type": "number" },
+        "essayWeight": { "type": "number" },
+        "kkm": { "type": "number" },
+        "answerKey": { "type": "array", "description": "Daftar kunci PG (maksimal 45 butir)." },
+        "essayRubrics": { "type": "array", "description": "Daftar 5 rubrik penilaian esai." },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "code",
+        "name",
+        "gradeLevel",
+        "pgCount",
+        "essayCount",
+        "pgWeight",
+        "essayWeight",
+        "kkm",
+        "answerKey",
+        "essayRubrics",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "StudentSubmission": {
+      "title": "StudentSubmission",
+      "description": "Hasil pembacaan AI dan verifikasi guru untuk lembar jawaban siswa.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "ownerId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "subjectId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "fileName": { "type": "string", "maxLength": 200 },
+        "mimeType": { "type": "string", "maxLength": 80 },
+        "fileDataUrl": { "type": "string", "maxLength": 350000 },
+        "uploadedAt": { "type": "string", "format": "date-time" },
+        "studentName": { "type": "string", "maxLength": 150 },
+        "studentId": { "type": "string", "maxLength": 64 },
+        "studentClass": { "type": "string", "maxLength": 64 },
+        "sheetConditionNote": { "type": "string", "maxLength": 500 },
+        "status": { "type": "string", "enum": ["needs_review", "verified"] },
+        "verifiedBy": { "type": "string", "maxLength": 120 },
+        "verifiedAt": { "type": "string", "maxLength": 64 },
+        "mcAnswers": { "type": "array", "description": "Jawaban PG 1..40 atau 1..45." },
+        "essayAnswers": { "type": "array", "description": "Jawaban dan skor 5 soal esai." },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "subjectId",
+        "fileName",
+        "mimeType",
+        "fileDataUrl",
+        "uploadedAt",
+        "studentName",
+        "studentId",
+        "studentClass",
+        "sheetConditionNote",
+        "status",
+        "mcAnswers",
+        "essayAnswers",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/TeacherProfile" },
+      "description": "Dokumen profil guru pemilik ruang kerja sinkronisasi."
+    },
+    "/users/{userId}/subjects/{subjectId}": {
+      "schema": { "$ref": "#/entities/SubjectConfig" },
+      "description": "Daftar 8 mata pelajaran, kunci jawaban PG, dan rubrik 5 esai milik guru."
+    },
+    "/users/{userId}/submissions/{submissionId}": {
+      "schema": { "$ref": "#/entities/StudentSubmission" },
+      "description": "Daftar lembar jawaban siswa yang telah dikoreksi dan diedit oleh guru."
+    }
+  }
+}
